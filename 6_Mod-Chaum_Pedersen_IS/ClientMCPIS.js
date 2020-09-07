@@ -3,7 +3,7 @@ const mcl = require('mcl-wasm');
 mcl.init(mcl.BLS12_381).then( ()=>
 {
 
-const Prover = require('./ProverMCP.js');
+const Prover = require('./ProverMCPIS.js');
 const rp = require('request-promise');
 
 let prover = new Prover();
@@ -13,14 +13,13 @@ let hostname = 'http://127.0.0.1';
 let port = '8080';
 let base_path = 'protocols/mcpis';
 
-let [X1,X2] = prover.createCommitment();
+let [X1, X2] = prover.createCommitment();
 let A1 = prover.publicKey1;
 let A2 = prover.publicKey2;
 
 function encode(x){
     return x.getStr().slice(2);
 }
-
 let path = base_path+'/init';
 let options = {
     method: 'POST',
@@ -41,7 +40,7 @@ rp(options).then(res => {
     let c = new mcl.Fr();
     c.setStr(res.payload.c)
     
-    let [S1, S2] = prover.genProof(c);
+    let S = prover.genProof(c);
     
     let path = base_path+'/verify';
     let options = {
@@ -50,8 +49,7 @@ rp(options).then(res => {
         body: {
             session_token: res.session_token,
             payload: {
-                S1: encode(S1),
-                S2: encode(S2)
+                S: encode(S)
             },
             protocol_name: 'mcpis'
         }, 

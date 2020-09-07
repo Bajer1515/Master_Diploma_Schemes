@@ -32,22 +32,18 @@ class Verifier{
 
         this.Ac = mcl.mul(this.A, this.c);
         this.XAc = mcl.add(this.X,this.Ac);
-        // console.log('XAc:', this.XAc);
-        // console.log('Ac:', this.Ac)
         this.e1 = mcl.pairing(this.g1, this.S1);
-        // console.log('e1:', this.e1);
         this.e2 = mcl.pairing(this.g2, this.S2);
-        // console.log('e2:', this.e2);
         this.e3 = mcl.pairing(this.XAc, this.ghat);
 
         let left = mcl.mul(this.e1, this.e2);
         let L = left.getStr(10);
-        let right = this.e3;//.getStr(10);
+        let right = this.e3;
         let R = right.getStr(10);
         console.log(L)
         console.log(R)
 
-        return L === R; //left.isEqual(right);
+        return L === R; 
     }
 }
 
